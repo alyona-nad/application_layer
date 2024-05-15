@@ -12,26 +12,52 @@ const io = new Server(server, {
   }
 });
 
-io.on('connection', (socket) => {
-  socket.on('message', (msg) => {
-    axios.post('http://localhost:8080/send', {
-        "sender_name": msg.sender,
-        "string_message": msg.message,
-    })
-  });
-});
-
 app.use(express.json());
 
 app.use(cors({
   "origin": true,
 }));
 
+const queue = []
+
+io.on('connection', (socket) => {
+  socket.on('message', (msg) => {
+    const { sender, message } = msg;
+    queue.push({ sender, socket });
+    axios.post('http://localhost:8080/send', { sender_name: sender, string_message: message });
+  });
+});
+
 app.post('/receive', (req, res) => {
-    const { message, sender, timestamp, error } = req.body;
-    console.log(message, sender, timestamp, error);
-    io.emit('message', { message, sender, timestamp, error });
+  console.log(req.body);
+  const { message, sender, timestamp, error } = req.body;
+
+  let foundIndex = -1;
+  const foundSocket = queue.find((item, index) => {
+    if (item.sender === sender) {
+      foundIndex = index;
+      return true;
+    }
+    return false;
+  })?.socket;
+
+  if (foundSocket) {
+    if (foundIndex !== -1) {
+      queue.splice(foundIndex, 1);
+    }
+
+    if (error) {
+      foundSocket.emit('error');
+      res.sendStatus(200);
+      return;
+    }
+  }
+  if (error) {
     res.sendStatus(200);
+    return;
+  }
+  io.emit('message', { message, sender, timestamp, error });
+  res.sendStatus(200);
 });
 
 

@@ -45,7 +45,7 @@ function Message({message, time, sender, own, error}) {
                 <Typography variant={"body1"} component={"div"} color={"#F60808"} sx={{
                     display: error ? "block" : "none",
                     fontWeight: "400",
-                    fontSize: "12px",
+                    fontSize: "21px",
                     fontFamily: "Inter, sans-serif"
                 }}>{"При отправке сообщения возникла ошибка"}</Typography>
             </Box>

@@ -6,7 +6,7 @@ import {createTheme} from '@mui/material/styles';
 import {ThemeProvider} from "@mui/material";
 import ChatLayout from "./layouts/ChatLayout/ChatLayout.jsx";
 import {useDispatch, useSelector} from "react-redux";
-import {add} from "./features/messages/messageSlice.js";
+import {add, error} from "./features/messages/messageSlice.js";
 import {io} from "socket.io-client";
 
 const theme = createTheme({
@@ -39,6 +39,10 @@ function App() {
         newSocket.on("connect", () => {
             newSocket.on("message", (d) => {
                 dispatch(add(d))
+                console.log(d);
+            })
+            newSocket.on("error", (d) => {
+                dispatch(error(d))
                 console.log(d);
             })
             console.log("connected");

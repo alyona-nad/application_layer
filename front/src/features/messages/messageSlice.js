@@ -17,10 +17,19 @@ export const messageSlice = createSlice({
         },
         setUsername: (state, action) => {
             state.username = action.payload
+        },
+        error: (state) => {
+            state.messages = [...state.messages, {
+                sender: "С.И.С.Т.Е.М.А.",
+                message: "Это сообщение видите только вы.",
+                timestamp: new Date(Date.now()).toISOString(),
+                error: "true",
+                own: true
+            }]
         }
     },
 })
 
-export const { add, setUsername, clear } = messageSlice.actions
+export const { add, setUsername, clear, error } = messageSlice.actions
 
 export default messageSlice.reducer

@@ -9,7 +9,7 @@ function LoginLayout() {
     const dispatch = useDispatch();
     const [error, setError] = useState(false);
     const login = (e) => {
-        if(e.target[0].value) {
+        if(e.target[0].value && e.target[0].value.length <= 30) {
             dispatch(setUsername(e.target[0].value))
         } else {
             setError(true)
@@ -43,7 +43,7 @@ function LoginLayout() {
                         <p className={"logotext"}><span className={"nano"}>nano</span>Passport</p>
                     </Box>
 
-                    <TextField error={error} label="Имя" variant="outlined" size="small" sx={{width: "419px", mb: 5}}/>
+                    <TextField error={error} label="Имя" variant="outlined" size="small" multiline={false} sx={{width: "419px", mb: 5}}/>
                     <Button
                         type={"submit"}
                         variant="contained"

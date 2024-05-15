@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {AppBar, Box, Button, TextField, Toolbar, Typography} from "@mui/material";
 import logo from "../../assets/logo_big.png"
 import SendIcon from "@mui/icons-material/Send"
@@ -30,6 +30,17 @@ function ChatLayout({sendMessage}) {
         dispatch(setUsername(""))
         dispatch(clear());
     }
+
+    const ref = useRef<HTMLDivElement>(null);
+    useEffect(() => {
+      if (messages.length) {
+        ref.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "end",
+        });
+      }
+    }, [messages.length]);
+
 
     return (
         <Box sx={{
